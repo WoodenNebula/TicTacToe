@@ -9,12 +9,18 @@ Tictactoe::Tictactoe()
             {'4', m_ava.normal},{'5', m_ava.normal},{'6', m_ava.normal},
             {'7', m_ava.normal},{'8', m_ava.normal},{'9', m_ava.normal} })
 {
-    SetSymbol();
+    std::cout << "Starting Game" << std::endl;
+    m_SetSymbol();
+    //setting the seed for random num generator
+    srand((unsigned)time(NULL));
 }
 
-void Tictactoe::SetSymbol()
+Tictactoe::~Tictactoe() = default;
+
+void Tictactoe::m_SetSymbol()
 {
     bool isCross;
+    system("cls");
     std::cout << "Wanna play Circle(0) or Cross(1)?" << std::endl;
     std::cin >> isCross;
 
@@ -27,17 +33,38 @@ void Tictactoe::SetSymbol()
         m_symbols.user = " O ";
         m_symbols.computer = " X ";
     }
-
     std::cout << "\n Set user symbol to \"" << m_symbols.user << "\"" << std::endl;
+    system("pause");
 }
 
 void Tictactoe::StartGame()
 {
-    GetBoard();
-    SetUserPosition();
+    while (!m_IsGameOver())
+    {
+        m_Continue();
+    }
+    m_EndScreen();
 }
 
-void Tictactoe::GetBoard()
+void Tictactoe::m_Continue()
+{
+    m_GetBoard();
+    m_SetUserPosition();
+    m_ComputerMove();
+    m_GetBoard();
+}
+
+void Tictactoe::m_EndScreen()
+{
+    if (m_winner == 0)
+        std::cout << "\nCongratulation!!! You won!!!" << std::endl;
+    else
+        std::cout << "\nYou played good, better luck next time." << std::endl;
+
+    std::cout << "Game Over" << std::endl;
+}
+
+void Tictactoe::m_GetBoard()
 {
     int i = 1;
     system("cls");
@@ -60,36 +87,82 @@ void Tictactoe::GetBoard()
     }
 }
 
-void Tictactoe::SetUserPosition()
+void Tictactoe::m_SetUserPosition()
 {
-    char position;
     std::cout << "Your Turn: " << std::endl;
-    std::cin >> position;
-    m_position[position] = m_ava.user;
+    std::cin >> m_bufferPosition;
+    m_position[m_bufferPosition] = m_ava.user;
 
-    //Check if the game is finished or not
-    if(!m_isGameOver())
-        m_ComputerMove(position);
-        
-
-
+    m_PositionSeeds.erase(m_bufferPosition);
 }
 
 
-void Tictactoe::m_ComputerMove(char  userPosition)
+void Tictactoe::m_ComputerMove()
 {
+    char randomPos = (char)(49 + rand() % m_PositionSeeds.size());
+    //Attack the middle
     if (m_position['5'] == m_ava.normal)
         m_position['5'] = m_ava.computer;
-
-    for (auto& [pos, availab] : m_position)
-        std::cout << "[" << pos << "]" << " : " << availab << std::endl;
-
-    if (m_position[userPosition + '1'] == m_ava.normal)
-        m_position[userPosition + '1'] = m_ava.computer;
-    //else /*Tictactoe::m_ComputerMove(userPosition + '1');*/
+    //Random position
+    else if (m_position[randomPos] == m_ava.normal)
+        m_position[randomPos] = m_ava.computer;
+    else m_ComputerMove();
 }
 
-bool Tictactoe::m_isGameOver()
+bool Tictactoe::m_IsGameOver()
 {
-    return true;
+    //For 1
+    if(m_position['1'] != m_ava.normal)
+    {
+        if (m_position['1'] == m_position['2'] && m_position['1'] == m_position['3'])
+        {
+            m_winner = m_position['1'];
+            return true;
+        }
+        else if (m_position['1'] == m_position['5'] && m_position['1'] == m_position['9'])
+        {
+            m_winner = m_position['1'];
+            return true;
+        }
+        else if (m_position['1'] == m_position['4'] && m_position['1'] == m_position['7'])
+        {
+            m_winner = m_position['1'];
+            return true;
+        }
+    }
+
+    //For 2
+    if(m_position['2'] != m_ava.normal)
+    {
+        if (m_position['2'] == m_position['5'] && m_position['2'] == m_position['8'])
+        {
+            m_winner = m_position['2'];
+            return true;
+        }
+    }
+    //For 3
+    if (m_position['3'] != m_ava.normal)
+    {
+        if (m_position['3'] == m_position['6'] && m_position['3'] == m_position['9'])
+        {
+            m_winner = m_position['3'];
+            return true;
+        }
+        else if (m_position['3'] == m_position['5'] && m_position['3'] == m_position['7'])
+        {
+            m_winner = m_position['3'];
+            return true;
+        }
+    }
+
+    //For 4
+    if(m_position['4'] != m_ava.normal)
+    {
+        if (m_position['4'] == m_position['5'] && m_position['4'] == m_position['6'])
+        {
+            m_winner = m_position['4'];
+            return true;
+        }
+    }
+    return false;
 }
