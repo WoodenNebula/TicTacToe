@@ -3,9 +3,9 @@
 
 int main(void){
     char restart;
+    Tictactoe* T;
     do 
     {
-        Tictactoe* T;
         T = new Tictactoe();
     
         T->StartGame();

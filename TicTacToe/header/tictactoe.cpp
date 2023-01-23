@@ -47,10 +47,11 @@ void Tictactoe::StartGame()
         m_GetBoard();
         m_SetUserPosition();
         m_GetBoard();
-        if (m_IsGameOver())
+        if (m_IsGameOver()) 
             break;
         m_MoveDelay();
         m_ComputerMove();
+        m_GetBoard();
         if (m_IsGameOver())
             break;
     }
@@ -110,14 +111,14 @@ void Tictactoe::m_SetUserPosition()
         }
         else {
             std::cout << "PLACE OCCUPIED, EXITING" << std::endl;
-            std::cin.get();
+            system("pause");
             exit(101);
         }
     }
     else
     {
         std::cout << "Error, that position doesnot exist, EXITING" << std::endl;
-        std::cin.get();
+        system("pause");
         exit(102);
     }
 }
@@ -140,8 +141,8 @@ void Tictactoe::m_MoveDelay()
 void Tictactoe::m_ComputerMove()
 {
     //Attack the middle if available
-    if (m_position[5] == m_availability.normal)
-        m_position[5] = m_availability.computer;
+    if (m_position.at(5) == m_availability.normal)
+        m_position.at(5) = m_availability.computer;
     else
     {
         do  //Get a Random position between 1 and 9
@@ -168,63 +169,74 @@ bool Tictactoe::m_IsGameOver()
 
     //Win or Lose
     //For 1st Row
-    if(m_position[1] != m_availability.normal)
+    if(m_position.at(1) != m_availability.normal)
     {
         //Horizontal Check
-        if (m_position[1] == m_position[2] && m_position[1] == m_position[3])
+        if (m_position.at(1) == m_position.at(2) && m_position.at(1) == m_position.at(3))
         {
-            m_winner = m_position[1];
+            m_winner = m_position.at(1);
             return true;
         }
         //Diagonal Check
-        else if (m_position[1] == m_position[5] && m_position[1] == m_position[9])
+        else if (m_position.at(1) == m_position.at(5) && m_position.at(1) == m_position[9])
         {
-            m_winner = m_position[1];
+            m_winner = m_position.at(1);
             return true;
         }
         //Vertical Check
-        else if (m_position[1] == m_position[4] && m_position[1] == m_position[7])
+        else if (m_position.at(1) == m_position.at(4) && m_position.at(1) == m_position[7])
         {
-            m_winner = m_position[1];
+            m_winner = m_position.at(1);
             return true;
         }
     }
 
     //For 2nd Column
-    if(m_position[2] != m_availability.normal)
+    if(m_position.at(2) != m_availability.normal)
     {
         //Vertical Check
-        if (m_position[2] == m_position[5] && m_position[2] == m_position[8])
+        if (m_position.at(2) == m_position.at(5) && m_position.at(2) == m_position[8])
         {
-            m_winner = m_position[2];
+            m_winner = m_position.at(2);
             return true;
         }
     }
 
     //For 3rd Column
-    if (m_position[3] != m_availability.normal)
+    if (m_position.at(3) != m_availability.normal)
     {
         //Vertical Check
-        if (m_position[3] == m_position[6] && m_position[3] == m_position[9])
+        if (m_position.at(3) == m_position.at(6) && m_position.at(3) == m_position[9])
         {
-            m_winner = m_position[3];
+            m_winner = m_position.at(3);
             return true;
         }
         //Diagonal Check
-        else if (m_position[3] == m_position[5] && m_position[3] == m_position[7])
+        else if (m_position.at(3) == m_position.at(5) && m_position.at(3) == m_position[7])
         {
-            m_winner = m_position[3];
+            m_winner = m_position.at(3);
             return true;
         }
     }
 
-    //For 2nd Row/ 4th position
-    if(m_position[4] != m_availability.normal)
+    //For 2nd Row / 4th position
+    if(m_position.at(4) != m_availability.normal)
     {
         //Horizontal Check
-        if (m_position[4] == m_position[5] && m_position[4] == m_position[6])
+        if (m_position.at(4) == m_position.at(5) && m_position.at(4) == m_position.at(6))
         {
-            m_winner = m_position[4];
+            m_winner = m_position.at(4);
+            return true;
+        }
+    }
+
+    //For 3rd Row / 7th Position
+    if (m_position.at(7) != m_availability.normal)
+    {
+        //Horizontal Check
+        if (m_position.at(7) == m_position.at(8) && m_position.at(7) == m_position.at(9))
+        {
+            m_winner = m_position.at(7);
             return true;
         }
     }
