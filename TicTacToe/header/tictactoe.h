@@ -7,7 +7,9 @@
 #include <stdlib.h>
 #include <cstdlib>
 #include <time.h>
+#include <chrono>
 #include <vector>
+#include <thread>
 
 struct Availability {
     int normal = -1;
@@ -27,27 +29,32 @@ struct Symbols {
 
 class Tictactoe {
 private:
+    //Number of Players; 0 = EvE; 1 = PvE; 2 = PvP;
+    uint32_t m_numPlayers;
+
     //Available States of a position
-    Availability m_ava;
+    Availability m_availability;
 
     //Symbols for filling the position with
     Symbols m_symbols;
 
     //position : availability
-    std::map <char, int> m_position;
+    std::map <int, int> m_position;
 
-    //User BufferPosition to change the symbol
-    char m_bufferPosition = 0;
+    //User BufferPosition to change the symbol in the position on board
+    int m_bufferPosition = 0;
 
-    //Place Holder for random position eliminator for bot
-    std::map<char, int> m_PositionSeeds{
-        {'1', 0}, {'2', 0}, {'3', 0},
-        {'4', 0}, {'5', 0}, {'6', 0},
-        {'7', 0}, {'8', 0}, {'9', 0}};
+    //Place Holder for random position eliminator
+    std::map<int, int> m_PositionTracker = { { 1, 0 }, { 2, 0 }, { 3, 0 },
+                                             { 4, 0 }, { 5, 0 }, { 6, 0 },
+                                             { 7, 0 }, { 8, 0 }, { 9, 0 } };
+
+    //Pointer of the last position that is used to 
+    //retrieve the maxPosition available at any given time for Random Number Generator
+    std::map<int, int>::iterator m_lastPair;
 
     //Winner of the game
     int m_winner;
-
 
 private:
     /* Returns true if three continuous positions are filled with same availability */    
@@ -63,11 +70,11 @@ private:
     normal, userOccupied or computerOccupied */
     void m_SetUserPosition();
 
-    /* Fills a random position with cumputerSymbol */
-    void m_ComputerMove();
+    /* Prints "Thinking . . . " and Adds Delay of 1.5s*/
+    void m_MoveDelay();
 
-    /* Just calls functions until the game is over */
-    void m_Continue();
+    /* Fills a random position with computerSymbol */
+    void m_ComputerMove();
 
     /* Endscreen prompting for replay */
     void m_EndScreen();

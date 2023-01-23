@@ -15,6 +15,5 @@ int main(void){
         T->~Tictactoe();
     } while (restart == 'y' || restart == 'Y');
 
-    system("pause");
-    return 0;
+    return EXIT_SUCCESS;
 }
