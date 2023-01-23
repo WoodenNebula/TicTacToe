@@ -51,6 +51,8 @@ void Tictactoe::StartGame()
             break;
         m_MoveDelay();
         m_ComputerMove();
+        if (m_IsGameOver())
+            break;
     }
     m_EndScreen();
 }
@@ -107,13 +109,15 @@ void Tictactoe::m_SetUserPosition()
             m_PositionTracker.erase(m_bufferPosition);
         }
         else {
-            std::cout << "PLACE OCCUPIED" << std::endl;
+            std::cout << "PLACE OCCUPIED, EXITING" << std::endl;
+            std::cin.get();
             exit(101);
         }
     }
     else
     {
-        std::cout << "Error, that position doesnot exist" << std::endl;
+        std::cout << "Error, that position doesnot exist, EXITING" << std::endl;
+        std::cin.get();
         exit(102);
     }
 }
@@ -130,7 +134,7 @@ void Tictactoe::m_MoveDelay()
     std::cout << " .";
     std::this_thread::sleep_for(0.5s);
     std::cout << " .";
-    std::this_thread::sleep_for(1s);
+    std::this_thread::sleep_for(0.5s);
 }
 
 void Tictactoe::m_ComputerMove()
