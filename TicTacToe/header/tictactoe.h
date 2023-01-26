@@ -6,57 +6,91 @@
 #include <string>
 #include <stdlib.h>
 #include <cstdlib>
-#include <time.h>
 #include <chrono>
 #include <vector>
 #include <thread>
-
-struct Availability {
-    int normal = -1;
-    int computer = 1;
-    int user = 0;
-};
-
-struct Symbols {
-    //Default Symbol to fill the position with
-    std::string normal;
-    //User Symbol to fill the position with
-    std::string user;
-    //Symbol that the computer fills the position with
-    std::string computer;
-};
+#include <limits>
 
 
 class Tictactoe {
-private:
-    //Number of Players; 0 = EvE; 1 = PvE; 2 = PvP;
-    uint32_t m_numPlayers;
+public:
+    /* Option to toggle Computer's move delay on or off */
+    bool computerMoveDelay;
 
-    //Available States of a position
-    Availability m_availability;
+public:
+    /* Constructor: */
+    Tictactoe();
+
+    /* Constructor: 
+    *** Can toggle Computer Move Delay from arguement*/
+    Tictactoe(const bool computerMoveDelay);
+
+    /*Destructor*/
+    ~Tictactoe();
+
+    /* Calls all the required functions to keep the game running */
+    void StartGame();
+
+
+private:
+    //Symbols that will fill the position in board
+    struct Symbols {
+        //Default Symbol to fill the position with
+        const std::string normal = " -- ";
+        //User Symbol to fill the position with
+        std::string user;
+        //Symbol that the computer fills the position with
+        std::string computer;
+    };
+
+    //Possible States of a position
+    enum PositionState {
+        A_Normal = -1, A_User = 0, A_Computer = 1
+    };
+
+    //Possible Errors regarding position of the Board while user passes their choice
+    enum PositionERROR {
+        noERROR = 0, posOutofBound = 404, posOccupied = 405, badInput = 406
+    };
+
+    //Number of Players; 0 = EvE; 1 = PvE; 2 = PvP;
+    enum NumPlayers {
+        zeroPlayer = 0, onePlayer, twoPlayer
+    };
+
+
+/* Member variables */
+private:
 
     //Symbols for filling the position with
     Symbols m_symbols;
 
     //position : availability
-    std::map <int, int> m_position;
+    std::map <int, PositionState> m_position;
 
     //User BufferPosition to change the symbol in the position on board
-    int m_bufferPosition = 0;
+    uint32_t m_bufferPosition = 0;
 
     //Place Holder for random position eliminator
-    std::map<int, int> m_PositionTracker = { { 1, 0 }, { 2, 0 }, { 3, 0 },
-                                             { 4, 0 }, { 5, 0 }, { 6, 0 },
-                                             { 7, 0 }, { 8, 0 }, { 9, 0 } };
+    std::map<int, const bool> m_positionTracker = { { 1, false}, { 2, false}, { 3, false},
+                                             { 4, false}, { 5, false}, { 6, false},
+                                             { 7, false}, { 8, false}, { 9, false} };
 
-    //Pointer of the last position that is used to 
+    //Iterator to the last position in Position Tracker of  that will be used to 
     //retrieve the maxPosition available at any given time for Random Number Generator
-    std::map<int, int>::iterator m_lastPair;
+    std::map<int, const bool>::iterator m_lastPair;
+
+    //Error Code holder
+    PositionERROR posERROR;
 
     //Winner of the game
-    int m_winner;
+    PositionState m_winner;
 
+/* Methods */
 private:
+    /* Prompts the user if they want Computer's move to be delayed or not */
+    void m_promptComputerMoveDelay();
+
     /* Returns true if three continuous positions are filled with same availability */    
     bool m_IsGameOver();
 
@@ -68,7 +102,7 @@ private:
 
     /* Modify the state of the position user provides;
     normal, userOccupied or computerOccupied */
-    void m_SetUserPosition();
+    PositionERROR m_SetUserPosition();
 
     /* Prints "Thinking . . . " and Adds Delay of 1.5s*/
     void m_MoveDelay();
@@ -78,17 +112,5 @@ private:
 
     /* Endscreen prompting for replay */
     void m_EndScreen();
-
-public:
-    /*Constructor:
-    Creates an empty board and
-    asks user for their symbol of choice */
-    Tictactoe();
-
-    /*Destructor*/
-    ~Tictactoe();
-
-    /* Calls all the required functions to keep the game running */
-    void StartGame();
 
 };
