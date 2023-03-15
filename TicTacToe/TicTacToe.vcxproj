@@ -166,7 +166,9 @@
     <ClInclude Include="header\tictactoe.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="header\tictactoe.cpp" />
+    <ClCompile Include="src\logic.cpp" />
+    <ClCompile Include="src\Source.cpp" />
+    <ClCompile Include="src\tictactoe.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
